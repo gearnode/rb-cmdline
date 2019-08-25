@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+
+cmd = Cmdline.new
+cmd.parse(Cmdline.argv)

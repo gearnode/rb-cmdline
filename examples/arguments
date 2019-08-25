@@ -1,0 +1,14 @@
+#!/usr/bin/env ruby
+
+require("rb-cmdline")
+
+cmd = Cmdline.new
+cmd.add_argument("foo", "the first argument")
+cmd.add_argument("bar", "the second argument")
+cmd.add_trailing_arguments("name", "a trailing argument")
+
+cmd.parse(Cmdline.argv)
+
+printf("foo: %s\n", cmd.argument_value("foo"))
+printf("bar: %s\n", cmd.argument_value("bar"))
+printf("names: %s\n", cmd.trailing_arguments_values("name"))

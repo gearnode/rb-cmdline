@@ -1,0 +1,29 @@
+#!/usr/bin/env ruby
+
+require("rb-cmdline")
+
+cmd = Cmdline.new
+
+cmd.add_command("foo", "subcommand 1")
+cmd.add_command("bar", "subcommand 2")
+
+cmd.parse(Cmdline.argv)
+
+commands = {
+  "foo" => -> (args) {
+    printf("running command \"foo\" with arguments %s\n", args[1..])
+  },
+  "bar" => -> (args) {
+    cmd = CLI.new
+    cmd.add_option("n", "", "value", "an example value")
+    cmd.parse(args)
+
+    printf("running command \"bar\" with arguments %s\n", args[1..])
+
+    if cmd.is_option_set("n")
+      printf("n: %s\n", cmd.option_value("n"))
+    end
+  }
+}
+
+commands[cmd.command_name].call(cmd.command_name_and_arguments)
