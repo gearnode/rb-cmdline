@@ -1,4 +1,6 @@
 #!/usr/bin/env ruby
 
+require("rb-cmdline")
+
 cmd = Cmdline.new
 cmd.parse(Cmdline.argv)
