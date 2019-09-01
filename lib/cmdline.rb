@@ -360,7 +360,7 @@ module Cmdline
     def argument_value(name)
       self.arguments.each do |arg|
         if arg.name == name
-          return arg.name
+          return arg.value
         end
       end
       raise(ArgumentError, "unknown argument")
