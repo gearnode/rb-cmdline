@@ -98,6 +98,16 @@ module Cmdline
       self.program_name ||= ""
     end
 
+    # Add flag to the command line interface.
+    #
+    # @author Gearnode <bryan@frimin.fr>
+    # @since 1.0.0
+    #
+    # @param [String] short the short name of the flag
+    # @param [String] long the long name of the flag
+    # @param [String] description the description of the flag
+    #
+    # @return [void]
     def add_flag(short, long, description)
       option = Option.new(
         short_name: short.to_s,
@@ -109,6 +119,17 @@ module Cmdline
       addopt(option)
     end
 
+    # Add option to the command line interface.
+    #
+    # @author Gearnode <bryan@frimin.fr>
+    # @since 1.0.0
+    #
+    # @param [String] short the short name of the option
+    # @param [String] long the long name of the option
+    # @param [String] value the demo value of the option
+    # @param [String] description the description of the option
+    #
+    # @return [void]
     def add_option(short, long, value, description)
       option = Option.new(
         short_name: short.to_s,
@@ -120,6 +141,15 @@ module Cmdline
       addopt(option)
     end
 
+    # A default value to an option.
+    #
+    # @author Gearnode <bryan@frimin.fr>
+    # @since 1.0.0
+    #
+    # @param [String] name the name of the option
+    # @param [Object] value the default value of the option
+    #
+    # @return [void]
     def set_option_default(name, value)
       option = self.options[name]
       raise(ArgumentError, "unknown option") if option.nil?
@@ -128,6 +158,15 @@ module Cmdline
       option.default = value
     end
 
+    # Add argument to the command line interface.
+    #
+    # @author Gearnode <bryan@frimin.fr>
+    # @since 1.0.0
+    #
+    # @param [String] name the argument name
+    # @param [String] description the description of the argument
+    #
+    # @return [void]
     def add_argument(name, description)
       argument = Argument.new(
         name: name.to_s,
@@ -137,6 +176,15 @@ module Cmdline
       addarg(argument)
     end
 
+    # Add trailing argument to the command line interface.
+    #
+    # @author Gearnode <bryan@frimin.fr>
+    # @since 1.0.0
+    #
+    # @param [String] name the name of the trailing arguments
+    # @param [String] description the description of the trailing arguments
+    #
+    # @return [void]
     def add_trailing_arguments(name, description)
       argument = Argument.new(
         name: name.to_s,
@@ -147,6 +195,17 @@ module Cmdline
       addarg(argument)
     end
 
+    # Add command to the command line interface.
+    #
+    # @author Gearnode <bryan@frimin.fr>
+    # @since 1.0.0
+    #
+    # @param [String] name the name of the command
+    # @param [String] description the description of the command
+    #
+    # @raise [ArgumentError] when the command line has already argument
+    #
+    # @return [void]
     def add_command(name, description)
       if self.arguments.size.zero?
         add_argument("command", "the command to execute")
@@ -162,12 +221,28 @@ module Cmdline
       self.commands[cmd.name] = cmd
     end
 
+    # Exit with error.
+    #
+    # @author Gearnode <bryan@frimin.fr>
+    # @since 1.0.0
+    #
+    # @param (see Kernel#sprintf)
+    #
+    # @return [nil]
     def die(format, *args)
       msg = sprintf(format, *args)
       STDERR.puts("error: #{msg}")
       exit(1)
     end
 
+    # Parse the argument values.
+    #
+    # @author Gearnode <bryan@frimin.fr>
+    # @since 1.0.0
+    #
+    # @param [Array<String>] args
+    #
+    # @return [void]
     def parse(args)
       die("empty argument array") if args.size == 0
 
@@ -249,6 +324,12 @@ module Cmdline
       end
     end
 
+    # Print the usage of the command line interface.
+    #
+    # @author Gearnode <bryan@frimin.fr>
+    # @since 1.0.0
+    #
+    # @return [void]
     def print_usage
       usage = sprintf("Usage: %s OPTIONS", self.program_name)
       if self.arguments.size > 0
@@ -343,12 +424,32 @@ module Cmdline
       printf(usage)
     end
 
+    # Check if an option is set.
+    #
+    # @author Gearnode <bryan@frimin.fr>
+    # @since 1.0.0
+    #
+    # @param [String] name the name of the option
+    #
+    # @raise [ArgumentError] when the option does not exist
+    #
+    # @return [Boolean]
     def is_option_set(name)
       opt = self.options[name]
       raise(ArgumentError, "unknown option") if opt.nil?
       opt.set
     end
 
+    # Get the value of an option.
+    #
+    # @author Gearnode <bryan@frimin.fr>
+    # @since 1.0.0
+    #
+    # @param [String] name the name of the option
+    #
+    # @raise [ArgumentError] when the option does not exist
+    #
+    # @return [String]
     def option_value(name)
       opt = self.options[name]
       raise(ArgumentError, "unknown option") if opt.nil?
@@ -357,6 +458,16 @@ module Cmdline
       opt.default
     end
 
+    # Get the value of an argument.
+    #
+    # @author Gearnode <bryan@frimin.fr>
+    # @since 1.0.0
+    #
+    # @param [String] name the name of the argument
+    #
+    # @raise [ArgumentError] when the argument does not exist.
+    #
+    # @return [String]
     def argument_value(name)
       self.arguments.each do |arg|
         if arg.name == name
@@ -366,6 +477,16 @@ module Cmdline
       raise(ArgumentError, "unknown argument")
     end
 
+    # Get the values of the trailing arguments.
+    #
+    # @author Gearnode <bryan@frimin.fr>
+    # @since 1.0.0
+    #
+    # @param [String] name the name of the trailing arguments.
+    #
+    # @raise [ArgumentError] when the trailing arguments are empty.
+    #
+    # @return [Array<String>]
     def trailing_arguments_values(name)
       raise(ArgumentError, "empty argument array") if self.arguments.empty?
       last = self.arguments.last
@@ -373,16 +494,34 @@ module Cmdline
       last.trailing_values
     end
 
+    # Get the name of command to execute.
+    #
+    # @author Gearnode <bryan@frimin.fr>
+    # @since 1.0.0
+    #
+    # @return [String]
     def command_name
       raise(RuntimeError, "no command defined") if self.commands.empty?
       self.command
     end
 
+    # Get command arguments.
+    #
+    # @author Gearnode <bryan@frimin.fr>
+    # @since 1.0.0
+    #
+    # @return [Array<String>]
     def command_arguments_values
       raise(RuntimeError, "no command defined") if self.commands.empty?
       self.command_arguments
     end
 
+    # Get the command name and their arguments.
+    #
+    # @author Gearnode <bryan@frimin.fr>
+    # @since 1.0.0
+    #
+    # @return [Array<String>]
     def command_name_and_arguments
       raise(RuntimeError, "no command defined") if self.commands.empty?
       [self.command, *self.command_arguments]
@@ -421,6 +560,12 @@ module Cmdline
     end
   end
 
+  # Create new command line interface.
+  #
+  # @author Gearnode <bryan@frimin.fr>
+  # @since 1.0.0
+  #
+  # @return [CmdLine]
   def self.new
     cmd = CmdLine.new
     cmd.add_flag("h", "help", "print help and exit")
